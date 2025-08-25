@@ -1,0 +1,58 @@
+spring:
+  profiles:
+    active: dev
+  data:
+    redis:
+      database: 0
+      host: localhost
+      port: 6379
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/?serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: 123456
+
+
+langchain4j:
+  open-ai:
+    chat-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api-key: ${langchain4j.open-ai.chat-model.api-key}
+      model-name: qwen-plus
+      log-requests: true
+      log-responses: true
+    streaming-chat-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api-key: ${langchain4j.open-ai.chat-model.api-key}
+      model-name: qwen-plus
+      log-requests: true
+      log-responses: true
+    embedding-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api-key: ${langchain4j.open-ai.chat-model.api-key}
+      model-name: text-embedding-v3
+      log-requests: true
+      log-responses: true
+      max-segments-per-batch: 10
+
+  community:
+    redis:
+      host: localhost
+      port: 6379
+
+milvus:
+  host: localhost
+  port: 19530
+  token: root:milvus
+  database: gdgs_db
+  collection: demo_file
+
+
+logging:
+  level:
+    dev.langchain4j: debug
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
