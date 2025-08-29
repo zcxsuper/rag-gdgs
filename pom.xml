@@ -71,19 +71,6 @@
 			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 
-		<!--langchain4j-->
-		<!--<dependency>
-			<groupId>dev.langchain4j</groupId>
-			<artifactId>langchain4j-open-ai</artifactId>
-			<version>0.35.0</version>
-		</dependency>-->
-		<!--logback-->
-		<!--<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.5.18</version>
-		</dependency>-->
-
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j-easy-rag</artifactId>
