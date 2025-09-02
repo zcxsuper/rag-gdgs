@@ -41,6 +41,7 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<!--langchain4j起步依赖-->
 		<dependency>
 			<groupId>dev.langchain4j</groupId>
@@ -72,6 +73,34 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>java-jwt</artifactId>
+			<version>4.4.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.0.2</version>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-aop</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+		</dependency>
+
+		<dependency>
 			<groupId>dev.langchain4j</groupId>
 			<artifactId>langchain4j-easy-rag</artifactId>
 			<version>1.0.1-beta6</version>
@@ -90,11 +119,11 @@
 			<version>1.0.1-beta6</version>
 		</dependency>
 
-		<dependency>
-			<groupId>dev.langchain4j</groupId>
-			<artifactId>langchain4j-milvus</artifactId>
-			<version>1.0.1-beta6</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>dev.langchain4j</groupId>-->
+<!--			<artifactId>langchain4j-milvus</artifactId>-->
+<!--			<version>1.0.1-beta6</version>-->
+<!--		</dependency>-->
 
 		<!--lombok-->
 		<dependency>
@@ -109,11 +138,29 @@
 			<version>3.0.3</version>
 		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>mysql</groupId>-->
-<!--			<artifactId>mysql-connector-java</artifactId>-->
-<!--			<version>8.0.28</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.28</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-extension</artifactId>
+			<version>3.5.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-core</artifactId>
+			<version>3.5.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus-boot-starter</artifactId>
+			<version>3.5.5</version>
+		</dependency>
 
 		<dependency>
 			<groupId>io.milvus</groupId>

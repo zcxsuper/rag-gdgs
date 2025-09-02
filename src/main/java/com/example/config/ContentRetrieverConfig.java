@@ -13,15 +13,15 @@ public class ContentRetrieverConfig {
 
 
     // 构建向量数据库检索对象
-    @Bean
-    public ContentRetriever contentRetriever(EmbeddingStore<TextSegment> milvusEmbeddingStore, EmbeddingModel embeddingModel) {
-        return EmbeddingStoreContentRetriever.builder()
-                .embeddingStore(milvusEmbeddingStore) // 使用注入的 Milvus 向量存储
-                .embeddingModel(embeddingModel) // 使用注入的向量模型
-                .maxResults(3)                  // 指定最多返回3个最相关的结果
-                .minScore(0.5)                  // 指定相关性分数的最小阈值，过滤掉不相关的结果
-                .build();
-    }
+//    @Bean
+//    public ContentRetriever contentRetriever(EmbeddingStore<TextSegment> milvusEmbeddingStore, EmbeddingModel embeddingModel) {
+//        return EmbeddingStoreContentRetriever.builder()
+//                .embeddingStore(milvusEmbeddingStore) // 使用注入的 Milvus 向量存储
+//                .embeddingModel(embeddingModel) // 使用注入的向量模型
+//                .maxResults(3)                  // 指定最多返回3个最相关的结果
+//                .minScore(0.5)                  // 指定相关性分数的最小阈值，过滤掉不相关的结果
+//                .build();
+//    }
 
     /**
      * 使用 CommandLineRunner 在 Spring Boot 应用启动后执行数据注入逻辑。

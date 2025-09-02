@@ -1,5 +1,12 @@
 package com.example.repository;
 
+import com.example.domain.po.Message;
+import com.example.enums.SenderTypeEnum;
+import com.example.mapper.MessageMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.data.message.ChatMessageSerializer;
@@ -9,6 +16,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -21,22 +30,19 @@ public class RedisChatMemoryStore implements ChatMemoryStore {
     public List<ChatMessage> getMessages(Object memoryId) {
         // 获取
         String json = redisTemplate.opsForValue().get(memoryId);
-
         List<ChatMessage> list = ChatMessageDeserializer.messagesFromJson(json);
-
         return list;
     }
 
     @Override
     public void updateMessages(Object memoryId, List<ChatMessage> list) {
-        // 更新会话消息
+        // 更新
         String json = ChatMessageSerializer.messagesToJson(list);
         redisTemplate.opsForValue().set(memoryId.toString(), json, Duration.ofDays(1));
     }
 
-
     @Override
-    public void deleteMessages(Object o) {
+    public void deleteMessages(Object memoryId) {
 
     }
 }

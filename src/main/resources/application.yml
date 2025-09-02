@@ -4,33 +4,39 @@ spring:
   data:
     redis:
       database: 0
-      host: localhost
-      port: 6379
+      host: ${rag-gdgs.redis.host}
+      port: ${rag-gdgs.redis.port}
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/?serverTimezone=Asia/Shanghai&useSSL=false
-    username: root
-    password: 123456
+    url: jdbc:mysql://localhost:3306/rag_gdgs?serverTimezone=Asia/Shanghai&useSSL=false
+    username: ${rag-gdgs.datasource.username}
+    password: ${rag-gdgs.datasource.password}
+
+  rabbitmq:
+    host: ${rag-gdgs.rabbitmq.host}
+    port: ${rag-gdgs.rabbitmq.port}
+    username: ${rag-gdgs.rabbitmq.username}
+    password: ${rag-gdgs.rabbitmq.password}
 
 
 langchain4j:
   open-ai:
     chat-model:
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
-      api-key: ${langchain4j.open-ai.chat-model.api-key}
+      api-key: ${rag-gdgs.langchain4j.open-ai.chat-model.api-key}
       model-name: qwen-plus
       log-requests: true
       log-responses: true
     streaming-chat-model:
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
-      api-key: ${langchain4j.open-ai.chat-model.api-key}
+      api-key: ${rag-gdgs.langchain4j.open-ai.chat-model.api-key}
       model-name: qwen-plus
       log-requests: true
       log-responses: true
     embedding-model:
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
-      api-key: ${langchain4j.open-ai.chat-model.api-key}
+      api-key: ${rag-gdgs.langchain4j.open-ai.chat-model.api-key}
       model-name: text-embedding-v3
       log-requests: true
       log-responses: true
@@ -41,18 +47,28 @@ langchain4j:
       host: localhost
       port: 6379
 
-milvus:
-  host: localhost
-  port: 19530
-  token: root:milvus
-  database: gdgs_db
-  collection: demo_file
-
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
 
 logging:
   level:
     dev.langchain4j: debug
-mybatis:
-  configuration:
-    map-underscore-to-camel-case: true
+#
+#milvus:
+#  host: localhost
+#  port: 19530
+#  token: root:milvus
+#  database: gdgs_db
+#  collection: demo_file
+
+
+user:
+  password-length: ${rag-gdgs.user.password-length}
+
+jwt:
+  access-expire: ${rag-gdgs.jwt.access-expire}
+  refresh-expire: ${rag-gdgs.jwt.refresh-expire}
+  security: ${rag-gdgs.jwt.security}
+
 
