@@ -1,9 +1,12 @@
+server:
+  port: 8080
+
 spring:
   profiles:
     active: dev
+
   data:
     redis:
-      database: 0
       host: ${rag-gdgs.redis.host}
       port: ${rag-gdgs.redis.port}
 
@@ -18,6 +21,7 @@ spring:
     port: ${rag-gdgs.rabbitmq.port}
     username: ${rag-gdgs.rabbitmq.username}
     password: ${rag-gdgs.rabbitmq.password}
+    virtual-host: /rag-gdgs
 
 
 langchain4j:
@@ -28,24 +32,28 @@ langchain4j:
       model-name: qwen-plus
       log-requests: true
       log-responses: true
+
     streaming-chat-model:
       base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
       api-key: ${rag-gdgs.langchain4j.open-ai.chat-model.api-key}
       model-name: qwen-plus
       log-requests: true
       log-responses: true
-    embedding-model:
-      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
-      api-key: ${rag-gdgs.langchain4j.open-ai.chat-model.api-key}
-      model-name: text-embedding-v3
-      log-requests: true
-      log-responses: true
-      max-segments-per-batch: 10
+#    embedding-model:
+#      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+#      api-key: ${rag-gdgs.langchain4j.open-ai.chat-model.api-key}
+#      model-name: text-embedding-v3
+#      log-requests: true
+#      log-responses: true
+#      max-segments-per-batch: 10
 
+  # 用于实现聊天记忆存储
   community:
     redis:
       host: localhost
       port: 6379
+
+
 
 mybatis:
   configuration:
@@ -53,7 +61,7 @@ mybatis:
 
 logging:
   level:
-    dev.langchain4j: debug
+    com.example: debug
 #
 #milvus:
 #  host: localhost

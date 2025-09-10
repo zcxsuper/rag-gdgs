@@ -3,6 +3,7 @@ package com.example.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.cache.MybatisRedisCache;
 import com.example.domain.po.Message;
+import com.example.domain.po.Session;
 import org.apache.ibatis.annotations.CacheNamespace;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -11,8 +12,9 @@ import java.util.List;
 
 @Mapper
 @CacheNamespace(implementation = MybatisRedisCache.class)
-public interface MessageMapper extends BaseMapper<Message> {
+public interface SessionMapper extends BaseMapper<Session> {
 
-    @Select("select * from message where session_id = #{sessionId} order by create_time desc")
-    List<Message> findBySessionId(Long sessionId);
+    @Select("select * from session where user_id = #{userId}")
+    List<Session> getAllSessionId(Long userId);
+
 }

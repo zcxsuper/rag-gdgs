@@ -1,16 +1,11 @@
 package com.example.repository;
 
-import com.example.domain.po.Message;
-import com.example.enums.SenderTypeEnum;
-import com.example.mapper.MessageMapper;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.data.message.ChatMessageSerializer;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -25,6 +20,7 @@ public class RedisChatMemoryStore implements ChatMemoryStore {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
+
 
     @Override
     public List<ChatMessage> getMessages(Object memoryId) {

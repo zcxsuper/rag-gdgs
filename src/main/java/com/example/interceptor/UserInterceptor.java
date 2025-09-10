@@ -6,14 +6,17 @@ import com.example.util.TokenRedisUtil;
 import com.example.util.UserContextUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 /**
  * 线程级别管理用户信息
  */
+@Component
 public class UserInterceptor implements HandlerInterceptor {
 
-    private TokenRedisUtil tokenRedisUtil;
+    @Autowired
     private JwtUtil jwtUtil;
 
     /**
