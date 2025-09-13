@@ -32,11 +32,9 @@ public class UserInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IllegalAccessException {
         // 获取由网关记录的userId的值
         String token = request.getHeader("Authorization");
-
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
         }
-
         if (token == null || token.isEmpty()) {
             throw new TokenInvalidException("缺少token");
         }

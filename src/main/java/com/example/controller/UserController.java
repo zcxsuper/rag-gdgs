@@ -43,8 +43,6 @@ public class UserController {
     @Value("${user.password-length}")
     private int passwordLength;
 
-
-
     /**
      * 注册
      * @param registerDto

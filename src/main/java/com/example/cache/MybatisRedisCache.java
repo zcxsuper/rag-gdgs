@@ -47,7 +47,7 @@ public class MybatisRedisCache implements Cache {
     public void clear() {
         // 只删除当前Mapper的缓存数据
         String prefix = generateKey("");
-        System.out.println(prefix);
+        // System.out.println(prefix);
         Set<String> keys = redisTemplate.keys(prefix + "*");
         if (!keys.isEmpty()) {
             redisTemplate.delete(keys);

@@ -32,6 +32,14 @@
 		<maven.compiler.target>17</maven.compiler.target>
 	</properties>
 	<dependencies>
+<!--		缺少 MacOS 的 native DNS 解析优化包-->
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-resolver-dns-native-macos</artifactId>
+			<version>4.1.111.Final</version> <!-- 注意和你的 netty 版本保持一致 -->
+			<classifier>osx-aarch_64</classifier> <!-- 如果是 Apple Silicon M1/M2 -->
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -113,11 +121,11 @@
 		</dependency>
 
 		<!--引入langchain4j对于redis向量数据库的支持-->
-		<dependency>
-			<groupId>dev.langchain4j</groupId>
-			<artifactId>langchain4j-community-redis-spring-boot-starter</artifactId>
-			<version>1.0.1-beta6</version>
-		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>dev.langchain4j</groupId>-->
+<!--			<artifactId>langchain4j-community-redis-spring-boot-starter</artifactId>-->
+<!--			<version>1.0.1-beta6</version>-->
+<!--		</dependency>-->
 
 <!--		<dependency>-->
 <!--			<groupId>dev.langchain4j</groupId>-->

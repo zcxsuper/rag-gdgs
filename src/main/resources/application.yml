@@ -23,7 +23,6 @@ spring:
     password: ${rag-gdgs.rabbitmq.password}
     virtual-host: /rag-gdgs
 
-
 langchain4j:
   open-ai:
     chat-model:
@@ -47,11 +46,12 @@ langchain4j:
 #      log-responses: true
 #      max-segments-per-batch: 10
 
-  # 用于实现聊天记忆存储
-  community:
-    redis:
-      host: localhost
-      port: 6379
+    # redis向量存储支持
+#  community:
+#    redis:
+#      host: localhost
+#      port: 6379
+#      dimension: 1024
 
 
 
