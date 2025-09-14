@@ -27,10 +27,10 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
     @Override
     public List<Message> getMessageBySessionId(Long sessionId) {
-//        Long userId = UserContextUtil.getUserId();
-//        if(!userId.equals(sessionService.getById(sessionId).getUserId())){
-//            throw new BadRequestException("获取该会话记录权限不足");
-//        }
+        Long userId = UserContextUtil.getUserId();
+        if(!userId.equals(sessionService.getById(sessionId).getUserId())){
+            throw new BadRequestException("获取该会话记录权限不足");
+        }
         return messageMapper.findBySessionId(sessionId);
     }
 }

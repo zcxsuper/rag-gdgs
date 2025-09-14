@@ -13,6 +13,6 @@ import java.util.List;
 @CacheNamespace(implementation = MybatisRedisCache.class)
 public interface MessageMapper extends BaseMapper<Message> {
 
-    @Select("select * from message where session_id = #{sessionId} order by create_time desc")
+    @Select("select * from message where session_id = #{sessionId} order by create_time asc")
     List<Message> findBySessionId(Long sessionId);
 }

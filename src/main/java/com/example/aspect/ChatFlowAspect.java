@@ -6,9 +6,10 @@ import com.example.domain.po.Message;
 import com.example.enums.AssistantTypeEnum;
 import com.example.enums.MessageTypeEnum;
 import com.example.enums.SenderTypeEnum;
-import com.example.service.MessageService;
+import com.example.exception.BadRequestException;
+import com.example.service.SessionService;
 import com.example.util.UserContextUtil;
-import jakarta.annotation.Resource;
+import com.fasterxml.jackson.databind.ObjectMapper; // Jackson
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -16,20 +17,22 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static com.example.enums.AssistantTypeEnum.LOCAL;
 
 @Aspect
 @Component
+@RequiredArgsConstructor
 @Slf4j
 public class ChatFlowAspect {
 
-    @Resource
-    private RabbitTemplate rabbitTemplate;
+
+    private final RabbitTemplate rabbitTemplate;
+    private final SessionService sessionService;
 
     private void sendMessage(Message message) {
         rabbitTemplate.convertAndSend(
@@ -57,8 +60,17 @@ public class ChatFlowAspect {
             sessionId = Long.parseLong(split[0]);
             assistantType = split[1];
         }
-        String message = (String) args[1];
+
+        String json = (String) args[1];
+        ObjectMapper mapper = new ObjectMapper();
+        String message = (String) mapper.readValue(json, Map.class).get("message");
+
         log.info("sessionId: {}, message: {}", sessionId, message);
+
+        Long userId = UserContextUtil.getUserId();
+        if(!userId.equals(sessionService.getById(sessionId).getUserId())){
+            throw new BadRequestException("会话权限不足");
+        }
 
         Message messageUser = Message.builder()
                 .sessionId(sessionId)

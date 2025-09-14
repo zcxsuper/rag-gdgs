@@ -1,5 +1,6 @@
 package com.example.service;
 
+import com.example.util.UserContextUtil;
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.spring.AiService;
@@ -17,6 +18,7 @@ import dev.langchain4j.service.spring.AiServiceWiringMode;
 )
 // @AiService
 public interface Assistant {
+
     // @SystemMessage("")
 //    Flux<String> chat(@MemoryId String memoryId, @UserMessage String message);
     String chat(@MemoryId String session, @UserMessage String message);

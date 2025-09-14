@@ -2,12 +2,14 @@ package com.example.controller;
 
 import com.example.annotation.ChatFlow;
 import com.example.domain.ResponseResult;
+import com.example.exception.BadRequestException;
 import com.example.service.Assistant;
+import com.example.service.SessionService;
+import com.example.util.UserContextUtil;
+import jakarta.annotation.Resource;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -34,8 +36,8 @@ public class AssistantController {
      * @return
      */
     @ChatFlow
-    @GetMapping("/chat")
-    public ResponseResult<String> chat(@RequestParam String session, @RequestParam String message) {
+    @PostMapping("/chat")
+    public ResponseResult<String> chat(@RequestParam String session, @RequestBody String message) {
         return ResponseResult.success(assistant.chat(session, message));
     }
 }
