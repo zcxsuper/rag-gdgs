@@ -23,6 +23,7 @@ public class SpringMvcConfig implements WebMvcConfigurer {
         // 拦截器会在 Controller 执行前、执行后被调用
         registry.addInterceptor(userInterceptor)
                 .excludePathPatterns("/api/v1/user/login")
-                .excludePathPatterns("/api/v1/user/register");
+                .excludePathPatterns("/api/v1/user/register")
+                .excludePathPatterns("/api/v1/assistant/chat");
     }
 }

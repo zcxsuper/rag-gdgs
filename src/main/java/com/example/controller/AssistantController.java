@@ -6,10 +6,16 @@ import com.example.exception.BadRequestException;
 import com.example.service.Assistant;
 import com.example.service.SessionService;
 import com.example.util.UserContextUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -22,22 +28,23 @@ public class AssistantController {
         this.assistant = assistant;
     }
 
-    // 流式展示
-//    @GetMapping(value = "/chat",produces = "text/html;charset=utf-8")
-//    public Flux<String> chat(String memoryId, String message) {
-//        return assistant.chat(memoryId, message);
-//    }
-
     /**
      * session -》sessionId:LOCAL/ONLINE
      *
      * @param session
-     * @param message
+     * @param map {"message":...}
      * @return
      */
-    @ChatFlow
+    /*@ChatFlow
     @PostMapping("/chat")
-    public ResponseResult<String> chat(@RequestParam String session, @RequestBody String message) {
+    public ResponseResult<String> chat(@RequestParam String session, @RequestBody Map<String,String> map) {
+        String message = map.get("message");
         return ResponseResult.success(assistant.chat(session, message));
+    }*/
+    @ChatFlow
+    @PostMapping(path = "/chat")
+    public Flux<String> chat(@RequestParam String session, @RequestBody Map<String,String> map) {
+        String message = map.get("message");
+        return assistant.chat(session, message);
     }
 }

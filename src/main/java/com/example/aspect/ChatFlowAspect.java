@@ -18,6 +18,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -51,9 +52,10 @@ public class ChatFlowAspect {
         // 输入参数
         Object[] args = joinPoint.getArgs();
         String session = (String) args[0];
-        long sessionId;
-        String assistantType = String.valueOf(LOCAL);
+        final long sessionId;
+        final String assistantType;
         if (!session.contains(":")) {
+            assistantType = String.valueOf(LOCAL);
             sessionId = Long.parseLong(session);
         } else {
             String[] split = session.split(":");
@@ -61,16 +63,13 @@ public class ChatFlowAspect {
             assistantType = split[1];
         }
 
-        String json = (String) args[1];
-        ObjectMapper mapper = new ObjectMapper();
-        String message = (String) mapper.readValue(json, Map.class).get("message");
+        Map<?,?> map = (Map<?,?>) args[1];
+        String message = (String) map.get("message");
 
-        log.info("sessionId: {}, message: {}", sessionId, message);
-
-        Long userId = UserContextUtil.getUserId();
+        /*Long userId = UserContextUtil.getUserId();
         if(!userId.equals(sessionService.getById(sessionId).getUserId())){
             throw new BadRequestException("会话权限不足");
-        }
+        }*/
 
         Message messageUser = Message.builder()
                 .sessionId(sessionId)
@@ -84,7 +83,7 @@ public class ChatFlowAspect {
 
         Object result = joinPoint.proceed();
 
-        if (result instanceof ResponseResult<?> response) {
+        /*if (result instanceof ResponseResult<?> response) {
             log.info("ChatFlow 输出: code={}, msg={}, data={}",
                     response.getCode(), response.getMsg(), response.getData());
 
@@ -97,8 +96,29 @@ public class ChatFlowAspect {
                     .assistantType(AssistantTypeEnum.valueOf(assistantType))
                     .build();
             sendMessage(messageAi);
+        }*/
+
+        if (!(result instanceof Flux<?> flux)) {
+            throw new IllegalArgumentException("方法必须返回 Flux<String> 以支持流式输出");
         }
-        return result;
+
+        StringBuilder buffer = new StringBuilder();
+        return flux
+                .doOnNext(buffer::append)
+                .doOnComplete(() -> {
+                    String finalAnswer = buffer.toString();
+                    log.info("Chat 完成输出: {}", finalAnswer);
+                    Message messageAi = Message.builder()
+                            .sessionId(sessionId)
+                            .senderType(SenderTypeEnum.AI)
+                            .messageType(MessageTypeEnum.TEXT)
+                            .createTime(LocalDateTime.now())
+                            .contents(finalAnswer)
+                            .assistantType(AssistantTypeEnum.valueOf(assistantType))
+                            .build();
+                    sendMessage(messageAi);
+                })
+                .doOnError(err -> log.error("Flux 流出错", err));
     }
 }
 
