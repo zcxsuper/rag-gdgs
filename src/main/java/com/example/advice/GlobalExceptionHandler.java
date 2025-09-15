@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public Map<String, Object> handleAuthorizedException(UnauthorizedException e) {
         Map<String, Object> response = new HashMap<>();
-        response.put("code", HttpStatus.UNAUTHORIZED.value()); // 401
+        response.put("code", HttpStatus.BAD_REQUEST.value()); // 400
         response.put("msg", e.getMessage());
         return response;
     }

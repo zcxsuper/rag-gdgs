@@ -20,6 +20,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -104,7 +105,8 @@ public class ChatFlowAspect {
 
         StringBuilder buffer = new StringBuilder();
         return flux
-                .doOnNext(buffer::append)
+                .timeout(Duration.ofSeconds(60))
+                .doOnNext(buffer::append) // 非阻塞流
                 .doOnComplete(() -> {
                     String finalAnswer = buffer.toString();
                     log.info("Chat 完成输出: {}", finalAnswer);

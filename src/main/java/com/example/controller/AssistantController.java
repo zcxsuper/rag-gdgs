@@ -8,6 +8,8 @@ import com.example.service.SessionService;
 import com.example.util.UserContextUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.langchain4j.model.chat.response.ChatResponse;
+import dev.langchain4j.model.chat.response.StreamingChatResponseHandler;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +21,11 @@ import java.util.Map;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/assistant")
 public class AssistantController {
 
     private final Assistant assistant;
-
-    public AssistantController(Assistant assistant) {
-        this.assistant = assistant;
-    }
 
     /**
      * session -》sessionId:LOCAL/ONLINE
@@ -42,7 +41,7 @@ public class AssistantController {
         return ResponseResult.success(assistant.chat(session, message));
     }*/
     @ChatFlow
-    @PostMapping(path = "/chat")
+    @GetMapping(path = "/chat", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<String> chat(@RequestParam String session, @RequestBody Map<String,String> map) {
         String message = map.get("message");
         return assistant.chat(session, message);
