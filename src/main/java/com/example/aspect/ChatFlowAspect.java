@@ -103,7 +103,7 @@ public class ChatFlowAspect {
             throw new IllegalArgumentException("方法必须返回 Flux<String> 以支持流式输出");
         }
 
-        StringBuilder buffer = new StringBuilder();
+        StringBuffer buffer = new StringBuffer();
         return flux
                 .timeout(Duration.ofSeconds(60))
                 .doOnNext(buffer::append) // 非阻塞流

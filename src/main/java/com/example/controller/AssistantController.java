@@ -41,7 +41,7 @@ public class AssistantController {
         return ResponseResult.success(assistant.chat(session, message));
     }*/
     @ChatFlow
-    @GetMapping(path = "/chat", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/chat",produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> chat(@RequestParam String session, @RequestBody Map<String,String> map) {
         String message = map.get("message");
         return assistant.chat(session, message);
