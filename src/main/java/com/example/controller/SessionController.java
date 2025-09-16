@@ -5,10 +5,10 @@ import com.example.domain.po.Session;
 import com.example.service.SessionService;
 import com.example.util.UserContextUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -18,10 +18,30 @@ public class SessionController {
 
     private final SessionService sessionService;
 
-    @GetMapping()
+    @GetMapping
     public ResponseResult<List<Session>> getAllSessionId() {
         Long userId = UserContextUtil.getUserId();
         return ResponseResult.success(sessionService.getAllSessionId(userId));
     }
 
+    @PostMapping
+    public ResponseResult<T> createSession() {
+        Long userId = UserContextUtil.getUserId();
+        sessionService.createSession(userId);
+        return ResponseResult.success();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseResult<T> deleteSession(Long id) {
+        Long userId = UserContextUtil.getUserId();
+        sessionService.deleteSession(id, userId);
+        return ResponseResult.success();
+    }
+
+    @PutMapping
+    public ResponseResult<T> updateSession(@RequestParam Long id, @RequestParam String title) {
+        Long userId = UserContextUtil.getUserId();
+        sessionService.updateSession(id, userId, title);
+        return ResponseResult.success();
+    }
 }
