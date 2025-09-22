@@ -32,15 +32,13 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    private final UserMapper userMapper;
-
     private final BCryptUtil bCryptUtil;
 
     @Override
     public User findEnabledUserId(String email) {
         LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(User::getEmail, email);
-        return userMapper.selectOne(queryWrapper);
+        return this.getOne(queryWrapper);
     }
 
     @Override
@@ -92,7 +90,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public void removeUser(Long userId, Long id) throws DatabaseException {
-        UserRoleEnum auth = userMapper.selectById(userId).getAuth();
+        UserRoleEnum auth = this.getById(userId).getAuth();
         if (!auth.equals(UserRoleEnum.ADMIN)) {
             throw new UnauthorizedException("权限不足");
         }
@@ -102,6 +100,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!this.removeById(id)) {
             throw new DatabaseException("删除用户失败");
         }
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return lambdaQuery()
+                .like(User::getEmail, email)
+                .one();
     }
 
     @Override
@@ -129,7 +134,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         return result;
     }
-
 
 
     @Nullable

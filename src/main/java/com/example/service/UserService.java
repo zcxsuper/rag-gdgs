@@ -18,11 +18,13 @@ public interface UserService extends IService<User> {
 
     User checkPassword(LoginDto loginDto);
 
-    String register(RegisterDto registerDto) throws DatabaseException;
+    String register(RegisterDto registerDto);
 
-    void updateUserInfo(Long userId, UserUpdateDto userUpdateDto) throws UserException, DatabaseException;
+    void updateUserInfo(Long userId, UserUpdateDto userUpdateDto);
 
     void removeUser(Long userId, Long id);
+
+    User getUserByEmail(String email);
 
     PageDTO<UserInfoVo> getAllUserInfo(Integer pageNum, Integer pageSize);
 

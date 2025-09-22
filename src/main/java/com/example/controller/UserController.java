@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
+import com.example.annotation.AuthorizeAdmin;
 import com.example.domain.ResponseResult;
 import com.example.domain.ResultCode;
 import com.example.domain.dto.LoginDto;
@@ -9,8 +10,6 @@ import com.example.domain.dto.UserUpdateDto;
 import com.example.domain.po.User;
 import com.example.domain.vo.LoginVo;
 import com.example.domain.vo.UserInfoVo;
-import com.example.enums.UserRoleEnum;
-import com.example.exception.UnauthorizedException;
 import com.example.service.UserService;
 import com.example.util.JwtUtil;
 import com.example.util.TokenRedisUtil;
@@ -45,6 +44,7 @@ public class UserController {
 
     /**
      * 注册
+     *
      * @param registerDto
      * @return
      * @throws BadRequestException
@@ -71,6 +71,7 @@ public class UserController {
 
     /**
      * 登录
+     *
      * @param loginDto
      * @return
      */
@@ -87,6 +88,7 @@ public class UserController {
 
     /**
      * 退出
+     *
      * @return
      */
     @PostMapping("/logout")
@@ -98,13 +100,14 @@ public class UserController {
 
     /**
      * 查看个人信息
+     *
      * @return
      */
     @GetMapping
     public ResponseResult<UserInfoVo> getUserInfo() {
         Long userId = UserContextUtil.getUserId();
         User user = userService.getById(userId);
-        if(user == null) {
+        if (user == null) {
             return ResponseResult.error(ResultCode.BAD_REQUEST, "用户信息不存在");
         }
         UserInfoVo userInfoVo = new UserInfoVo();
@@ -114,6 +117,7 @@ public class UserController {
 
     /**
      * 注销
+     *
      * @return
      */
     @DeleteMapping
@@ -128,6 +132,7 @@ public class UserController {
 
     /**
      * 修改个人信息
+     *
      * @param userUpdateDto
      * @return
      */
@@ -146,10 +151,8 @@ public class UserController {
      * @return
      */
     @DeleteMapping("/admin/{id}")
+    @AuthorizeAdmin
     public ResponseResult<T> deleteUser(@PathVariable Long id) {
-        if (id == null) {
-            throw new BadRequestException("用户不存在");
-        }
         Long userId = UserContextUtil.getUserId();
         // 执行删除操作
         userService.removeUser(userId, id);
@@ -158,18 +161,19 @@ public class UserController {
         return ResponseResult.success();
     }
 
+    @GetMapping("/admin/email")
+    @AuthorizeAdmin
+    public ResponseResult<User> getUserByEmail(@RequestParam String email) {
+        return ResponseResult.success(userService.getUserByEmail(email));
+    }
+
     /**
      * 查看用户列表
      */
-
     @GetMapping("/admin")
-    public ResponseResult<PageDTO<UserInfoVo>> getAllUserInfo(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
-                                                              @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+    @AuthorizeAdmin
+    public ResponseResult<PageDTO<UserInfoVo>> getAllUserInfo(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum, @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         //分页查询订单信息
-        Long userId = UserContextUtil.getUserId();
-        if (!userService.getById(userId).getAuth().equals(UserRoleEnum.ADMIN)) {
-            throw new UnauthorizedException("权限不足");
-        }
         PageDTO<UserInfoVo> page = userService.getAllUserInfo(pageNum, pageSize);
         return ResponseResult.success(page);
     }
