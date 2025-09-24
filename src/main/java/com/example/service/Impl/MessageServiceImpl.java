@@ -33,8 +33,11 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
     @Override
     public PageDTO<Message> getMessageByPage(Integer pageNum, Integer pageSize) {
-        // 分页查询
-        Page<Message> page = this.lambdaQuery().page(new Page<>(pageNum, pageSize));
+
+        // 分页查询 + 倒序
+        Page<Message> page = this.lambdaQuery()
+                .orderByDesc(Message::getCreateTime) // 按 createTime 倒序
+                .page(new Page<>(pageNum, pageSize));
 
         // 获取分页记录
         List<Message> records = page.getRecords();
