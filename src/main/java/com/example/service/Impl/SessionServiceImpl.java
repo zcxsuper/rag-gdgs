@@ -1,10 +1,7 @@
 package com.example.service.Impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.domain.po.Session;
-import com.example.domain.po.User;
+import com.example.domain.entity.Session;
 import com.example.exception.BadRequestException;
 import com.example.mapper.SessionMapper;
 import com.example.service.SessionService;
@@ -31,8 +28,6 @@ public class SessionServiceImpl extends ServiceImpl<SessionMapper, Session> impl
         Session session = Session.builder()
                 .userId(userId)
                 .title(String.valueOf(LocalDateTime.now()))
-                .createTime(LocalDateTime.now())
-                .updateDate(LocalDateTime.now())
                 .build();
         this.save(session);
     }
@@ -54,7 +49,6 @@ public class SessionServiceImpl extends ServiceImpl<SessionMapper, Session> impl
         this.update()
                 .eq("id", id)
                 .set("title", title)
-                .set("update_date", LocalDateTime.now())
                 .update();
     }
 }

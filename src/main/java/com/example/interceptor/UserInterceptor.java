@@ -2,7 +2,6 @@ package com.example.interceptor;
 
 import com.example.exception.TokenInvalidException;
 import com.example.util.JwtUtil;
-import com.example.util.TokenRedisUtil;
 import com.example.util.UserContextUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +28,7 @@ public class UserInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IllegalAccessException {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         // 获取由网关记录的userId的值
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
@@ -53,7 +52,7 @@ public class UserInterceptor implements HandlerInterceptor {
      * @throws Exception
      */
     @Override
-    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         UserContextUtil.clear();
     }
 }

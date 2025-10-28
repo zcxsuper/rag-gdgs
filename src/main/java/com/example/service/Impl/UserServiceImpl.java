@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.example.domain.dto.LoginDto;
 import com.example.domain.dto.RegisterDto;
 import com.example.domain.dto.UserUpdateDto;
-import com.example.domain.po.User;
+import com.example.domain.entity.User;
 import com.example.domain.vo.UserInfoVo;
 import com.example.enums.UserRoleEnum;
 import com.example.exception.UnauthorizedException;
@@ -23,7 +23,6 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,7 +58,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public String register(RegisterDto registerDto) throws DatabaseException {
         String email = registerDto.getEmail();
         String password = bCryptUtil.hashPassword(registerDto.getPassword().trim()); // 去掉字符串开头和结尾的空格
-        User user = User.builder().email(email).password(password).createTime(LocalDateTime.now()).updateTime(LocalDateTime.now()).build();
+        User user = User.builder().email(email).password(password).build();
         if (!this.save(user)) {
             throw new DatabaseException("用户信息保存失败");
         }
@@ -75,7 +74,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         User user = new User();
         user.setId(userId);
-        user.setUpdateTime(LocalDateTime.now());
         BeanUtils.copyProperties(userUpdateDto, user);
         if (userUpdateDto.getPassword() != null && userUpdateDto.getConfirmPassword() != null) {
             if (!userUpdateDto.getPassword().equals(userUpdateDto.getConfirmPassword())) {

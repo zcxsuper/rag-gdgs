@@ -1,5 +1,7 @@
 server:
   port: 8080
+  servlet:
+    context-path: /api/v1
 
 spring:
   profiles:
@@ -70,7 +72,7 @@ mybatis:
 logging:
   level:
     com.example: debug
-#
+
 #milvus:
 #  host: localhost
 #  port: 19530

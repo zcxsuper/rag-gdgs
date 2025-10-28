@@ -16,7 +16,7 @@ public class UserInfoVo {
 
     private UserRoleEnum auth;
 
-    private LocalDateTime createTime;
+    private LocalDateTime created;
 
-    private LocalDateTime updateTime;
+    private LocalDateTime updated;
 }

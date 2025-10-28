@@ -2,7 +2,7 @@ package com.example.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.domain.po.Message;
+import com.example.domain.entity.Message;
 
 import java.util.List;
 

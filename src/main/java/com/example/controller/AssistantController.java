@@ -22,7 +22,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/assistant")
+@RequestMapping("/assistant")
 public class AssistantController {
 
     private final Assistant assistant;

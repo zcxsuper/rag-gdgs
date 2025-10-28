@@ -3,7 +3,7 @@ package com.example.service.Impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.example.domain.po.Message;
+import com.example.domain.entity.Message;
 import com.example.exception.BadRequestException;
 import com.example.mapper.MessageMapper;
 import com.example.service.MessageService;
@@ -36,7 +36,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message> impl
 
         // 分页查询 + 倒序
         Page<Message> page = this.lambdaQuery()
-                .orderByDesc(Message::getCreateTime) // 按 createTime 倒序
+                .orderByDesc(Message::getCreated) // 按 created 倒序
                 .page(new Page<>(pageNum, pageSize));
 
         // 获取分页记录

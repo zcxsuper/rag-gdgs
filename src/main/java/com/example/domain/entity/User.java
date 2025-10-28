@@ -1,8 +1,6 @@
-package com.example.domain.po;
+package com.example.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.example.enums.UserRoleEnum;
 import lombok.*;
 
@@ -26,7 +24,9 @@ public class User {
 
     private UserRoleEnum auth;
 
-    private LocalDateTime createTime;
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime created;
 
-    private LocalDateTime updateTime;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updated;
 }

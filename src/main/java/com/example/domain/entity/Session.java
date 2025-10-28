@@ -1,9 +1,6 @@
-package com.example.domain.po;
+package com.example.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.example.enums.AssistantTypeEnum;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,8 +22,10 @@ public class Session {
 
     private String title;
 
-    private LocalDateTime createTime;
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime created;
 
-    private LocalDateTime updateDate;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updated;
 
 }

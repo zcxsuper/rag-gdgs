@@ -2,9 +2,8 @@ package com.example.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.cache.MybatisRedisCache;
-import com.example.domain.po.User;
+import com.example.domain.entity.User;
 import org.apache.ibatis.annotations.CacheNamespace;
-import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

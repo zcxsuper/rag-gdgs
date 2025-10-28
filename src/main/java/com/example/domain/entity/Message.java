@@ -1,8 +1,6 @@
-package com.example.domain.po;
+package com.example.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.example.enums.AssistantTypeEnum;
 import com.example.enums.MessageTypeEnum;
 import com.example.enums.SenderTypeEnum;
@@ -38,7 +36,8 @@ public class Message implements Serializable {
     /** 0 本地 1联网*/
     private AssistantTypeEnum assistantType;
 
-    private LocalDateTime createTime;
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime created;
 
     private String contents;
 }

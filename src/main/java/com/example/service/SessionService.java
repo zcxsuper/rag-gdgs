@@ -1,9 +1,7 @@
 package com.example.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.example.domain.po.Session;
-import com.example.domain.po.User;
+import com.example.domain.entity.Session;
 
 import java.util.List;
 

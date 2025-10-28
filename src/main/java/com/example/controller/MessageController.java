@@ -3,8 +3,7 @@ package com.example.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.PageDTO;
 import com.example.annotation.AuthorizeAdmin;
 import com.example.domain.ResponseResult;
-import com.example.domain.po.Message;
-import com.example.domain.vo.UserInfoVo;
+import com.example.domain.entity.Message;
 import com.example.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +12,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/message")
+@RequestMapping("/message")
 public class MessageController {
 
     private final MessageService messageService;

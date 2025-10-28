@@ -1,3 +1,4 @@
+/*
 package com.example.config;
 
 import dev.langchain4j.data.document.Document;
@@ -32,14 +33,16 @@ public class ContentRetrieverConfig {
 //                .build();
 //    }
 
-    /**
+    */
+/**
      * 使用 CommandLineRunner 在 Spring Boot 应用启动后执行数据注入逻辑。
      *
      * @param milvusEmbeddingStore  自动注入上面定义的 MilvusEmbeddingStore Bean
      * @param embeddingModel  自动注入您在别处定义的 EmbeddingModel Bean
      * @return CommandLineRunner 实例
-     */
-    /*@Bean
+     *//*
+
+    @Bean
     public CommandLineRunner dataIngestor(EmbeddingModel embeddingModel, EmbeddingStore<TextSegment> milvusEmbeddingStore) {
         return args -> {
             System.out.println("--- 开始加载和处理文档 ---");
@@ -68,5 +71,6 @@ public class ContentRetrieverConfig {
             ingestor.ingest(documents);
             System.out.println("--- 文档注入完成 ---");
         };
-    }*/
+    }
 }
+*/

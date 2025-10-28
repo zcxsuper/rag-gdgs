@@ -7,7 +7,7 @@ import com.example.domain.ResultCode;
 import com.example.domain.dto.LoginDto;
 import com.example.domain.dto.RegisterDto;
 import com.example.domain.dto.UserUpdateDto;
-import com.example.domain.po.User;
+import com.example.domain.entity.User;
 import com.example.domain.vo.LoginVo;
 import com.example.domain.vo.UserInfoVo;
 import com.example.service.UserService;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/user")
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;

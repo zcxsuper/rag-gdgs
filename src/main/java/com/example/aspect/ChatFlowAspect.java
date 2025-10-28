@@ -1,15 +1,11 @@
 package com.example.aspect;
 
 import com.example.config.RabbitConfig;
-import com.example.domain.ResponseResult;
-import com.example.domain.po.Message;
+import com.example.domain.entity.Message;
 import com.example.enums.AssistantTypeEnum;
 import com.example.enums.MessageTypeEnum;
 import com.example.enums.SenderTypeEnum;
-import com.example.exception.BadRequestException;
 import com.example.service.SessionService;
-import com.example.util.UserContextUtil;
-import com.fasterxml.jackson.databind.ObjectMapper; // Jackson
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -76,7 +72,7 @@ public class ChatFlowAspect {
                 .sessionId(sessionId)
                 .senderType(SenderTypeEnum.USER)
                 .messageType(MessageTypeEnum.TEXT)
-                .createTime(LocalDateTime.now())
+                .created(LocalDateTime.now())
                 .contents(message)
                 .assistantType(AssistantTypeEnum.valueOf(assistantType))
                 .build();
@@ -114,7 +110,7 @@ public class ChatFlowAspect {
                             .sessionId(sessionId)
                             .senderType(SenderTypeEnum.AI)
                             .messageType(MessageTypeEnum.TEXT)
-                            .createTime(LocalDateTime.now())
+                            .created(LocalDateTime.now())
                             .contents(finalAnswer)
                             .assistantType(AssistantTypeEnum.valueOf(assistantType))
                             .build();

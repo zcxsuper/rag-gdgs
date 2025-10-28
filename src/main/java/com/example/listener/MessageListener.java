@@ -1,7 +1,7 @@
 package com.example.listener;
 
 import com.example.config.RabbitConfig;
-import com.example.domain.po.Message;
+import com.example.domain.entity.Message;
 import com.example.service.MessageService;
 import jakarta.annotation.Resource;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
