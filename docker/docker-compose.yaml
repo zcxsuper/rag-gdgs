@@ -1,0 +1,209 @@
+# ============================================
+# 环境变量配置
+# ============================================
+# 存储路径前缀，可通过环境变量 RAG_GDGS_STORAGE_PATH 覆盖
+# 默认值：/data/rag-gdgs
+# 使用方式：
+#   1. 在 .env 文件中设置：RAG_GDGS_STORAGE_PATH=/custom/path
+#   2. 在命令行中设置：export RAG_GDGS_STORAGE_PATH=/custom/path
+#   3. 在 docker-compose.yaml 同目录下创建 .env 文件
+# ============================================
+
+services:
+  rag-gdgs-mysql:
+    image: mysql:8.0.36
+    ports:
+      - "3306:3306"
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-rag_gdgs}
+    volumes:
+      - ./mysql/conf:/etc/mysql/conf.d  # 配置文件（相对路径）
+      - ./mysql/init:/docker-entrypoint-initdb.d  # 初始化脚本（相对路径）
+      - ${RAG_GDGS_STORAGE_PATH:-/data/rag-gdgs}/mysql:/var/lib/mysql  # MySQL 数据目录（Bind Mount）
+      - ${RAG_GDGS_STORAGE_PATH:-/data/rag-gdgs}/mysql/logs:/var/log/mysql  # MySQL 日志目录（Bind Mount）
+    networks:
+      - rag-gdgs-network
+    restart: always
+    logging:
+      driver: "local"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-root}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  rag-gdgs-redis:
+    image: redis:8.2.0
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/conf/redis.conf:/usr/local/etc/redis/redis.conf  # 配置文件（相对路径） 
+      - ${RAG_GDGS_STORAGE_PATH:-/data/rag-gdgs}/redis:/data  # Redis 数据目录（Bind Mount）
+      - ${RAG_GDGS_STORAGE_PATH:-/data/rag-gdgs}/redis/logs:/var/log/redis  # Redis 日志目录（Bind Mount）
+    command: redis-server /usr/local/etc/redis/redis.conf
+    networks:
+      - rag-gdgs-network
+    restart: always
+    logging:
+      driver: "local"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  rag-gdgs-rabbitmq:
+    image: rabbitmq:3.8-management
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER:-rabbitmq}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS:-rabbitmq}
+      RABBITMQ_DEFAULT_VHOST: ${RABBITMQ_DEFAULT_VHOST:-/rag-gdgs}
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ${RAG_GDGS_STORAGE_PATH:-/data/rag-gdgs}/rabbitmq:/var/lib/rabbitmq  # RabbitMQ 数据目录（Bind Mount）
+      - ${RAG_GDGS_STORAGE_PATH:-/data/rag-gdgs}/rabbitmq/logs:/var/log/rabbitmq  # RabbitMQ 日志目录（Bind Mount）
+    networks:
+      - rag-gdgs-network
+    restart: always
+    logging:
+      driver: "local"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # 应用服务（如果应用容器化部署，取消注释并配置）
+  # rag-gdgs-app:
+  #   build:
+  #     context: ..
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     # 基础配置
+  #     TZ: ${TZ:-Asia/Shanghai}
+  #     SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-pro}
+  #     # LangChain4j 配置
+  #     RAG_GDGS_LANGCHAIN4J_OPEN_AI_CHAT_MODEL_API_KEY: ${RAG_GDGS_LANGCHAIN4J_OPEN_AI_CHAT_MODEL_API_KEY}
+  #     # JWT 配置
+  #     RAG_GDGS_JWT_ACCESS_EXPIRE: ${RAG_GDGS_JWT_ACCESS_EXPIRE:-1}
+  #     RAG_GDGS_JWT_REFRESH_EXPIRE: ${RAG_GDGS_JWT_REFRESH_EXPIRE:-7}
+  #     RAG_GDGS_JWT_SECURITY: ${RAG_GDGS_JWT_SECURITY}
+  #     # 用户配置
+  #     RAG_GDGS_USER_PASSWORD_LENGTH: ${RAG_GDGS_USER_PASSWORD_LENGTH:-6}
+  #     # Redis 配置
+  #     RAG_GDGS_REDIS_HOST: ${RAG_GDGS_REDIS_HOST:-rag-gdgs-redis}
+  #     RAG_GDGS_REDIS_PORT: ${RAG_GDGS_REDIS_PORT:-6379}
+  #     # 数据库配置
+  #     RAG_GDGS_DATASOURCE_USERNAME: ${RAG_GDGS_DATASOURCE_USERNAME:-root}
+  #     RAG_GDGS_DATASOURCE_PASSWORD: ${RAG_GDGS_DATASOURCE_PASSWORD}
+  #     # RabbitMQ 配置
+  #     RAG_GDGS_RABBITMQ_HOST: ${RAG_GDGS_RABBITMQ_HOST:-rag-gdgs-rabbitmq}
+  #     RAG_GDGS_RABBITMQ_PORT: ${RAG_GDGS_RABBITMQ_PORT:-5672}
+  #     RAG_GDGS_RABBITMQ_USERNAME: ${RAG_GDGS_RABBITMQ_USERNAME:-rabbitmq}
+  #     RAG_GDGS_RABBITMQ_PASSWORD: ${RAG_GDGS_RABBITMQ_PASSWORD:-rabbitmq}
+  #     # 文件存储配置
+  #     RAG_GDGS_FILE_STORAGE_PATH: ${RAG_GDGS_FILE_STORAGE_PATH:-/app/files}
+  #     # 文件上传配置
+  #     RAG_GDGS_MULTIPART_MAX_FILE_SIZE: ${RAG_GDGS_MULTIPART_MAX_FILE_SIZE:-200MB}
+  #     RAG_GDGS_MULTIPART_MAX_REQUEST_SIZE: ${RAG_GDGS_MULTIPART_MAX_REQUEST_SIZE:-1000MB}
+  #   volumes:
+  #     # ============================================
+  #     # 开发环境：挂载到项目目录（便于开发调试）
+  #     # ============================================
+  #     - ../logs:/app/logs  # 日志目录
+  #     - ../files:/app/files  # 文件存储目录（用户上传的文件，必须挂载）
+  #     
+  #     # ============================================
+  #     # 生产环境：使用 Bind Mount（与中间件保持一致）
+  #     # ============================================
+  #     # 所有存储统一使用 Bind Mount，挂载到 /data/rag-gdgs/ 目录
+  #     # 优点：
+  #     # 1. 显示宿主机物理磁盘空间（符合磁盘监控需求）
+  #     # 2. 便于备份和恢复（可直接使用 rsync、tar 等工具）
+  #     # 3. 便于监控和管理（文件在宿主机，易于查看）
+  #     # 4. 便于扩展（可挂载到独立的数据盘）
+  #     # 5. 性能更好（无额外抽象层）
+  #     # 6. 存储上限更灵活，不受 Docker 数据目录限制
+  #     # - ${RAG_GDGS_STORAGE_PATH:-/data/rag-gdgs}/logs:/app/logs  # 日志目录
+  #     # - ${RAG_GDGS_STORAGE_PATH:-/data/rag-gdgs}/files:/app/files  # 文件存储目录（用户上传的文件，必须挂载）
+  #   networks:
+  #     - rag-gdgs-network
+  #   depends_on:
+  #     rag-gdgs-mysql:
+  #       condition: service_healthy
+  #     rag-gdgs-redis:
+  #       condition: service_healthy
+  #     rag-gdgs-rabbitmq:
+  #       condition: service_healthy
+  #   restart: always
+  #   logging:
+  #     driver: "local"
+  #     options:
+  #       max-size: "10m"
+  #       max-file: "3"
+  #       compress: "true"
+
+# ============================================
+# 存储卷配置说明
+# ============================================
+# 所有存储均使用 Bind Mount（绑定挂载），不再使用 Named Volume
+# 
+# 存储路径配置：
+# - 通过环境变量 RAG_GDGS_STORAGE_PATH 配置存储路径前缀
+# - 默认值：/data/rag-gdgs
+# - 可在 .env 文件中设置，或在命令行中 export
+# 
+# 存储目录结构（宿主机，默认 /data/rag-gdgs/）：
+# ${RAG_GDGS_STORAGE_PATH:-/data/rag-gdgs}/
+#   ├── mysql/
+#   │   └── logs/   # MySQL 日志目录
+#   ├── redis/
+#   │   └── logs/   # Redis 日志目录
+#   ├── rabbitmq/
+#   │   └── logs/   # RabbitMQ 日志目录
+#   ├── logs/       # 应用日志目录（如果启用应用服务）
+#   └── files/      # 用户上传文件目录（如果启用应用服务）
+#
+# 部署前准备：
+# 1. 设置存储路径（可选，使用默认值可跳过）：
+#    # 方式1：在 .env 文件中设置（推荐）
+#    echo "RAG_GDGS_STORAGE_PATH=/data/rag-gdgs" > .env
+#    # 方式2：在命令行中设置
+#    export RAG_GDGS_STORAGE_PATH=/data/rag-gdgs
+# 2. 创建存储目录（使用环境变量或默认路径）：
+#    STORAGE_PATH=${RAG_GDGS_STORAGE_PATH:-/data/rag-gdgs}
+#    sudo mkdir -p ${STORAGE_PATH}/{mysql/logs,redis/logs,rabbitmq/logs,logs,files}
+# 3. 设置目录权限（根据容器用户ID调整，通常为 1000:1000）：
+#    sudo chown -R 1000:1000 ${STORAGE_PATH}
+# 4. 确保存储目录有足够空间（建议使用独立数据盘）
+#
+# 使用示例：
+# - 默认路径：/data/rag-gdgs
+# - 自定义路径：export RAG_GDGS_STORAGE_PATH=/mnt/data/rag-gdgs
+# - 独立数据盘：export RAG_GDGS_STORAGE_PATH=/data-disk/rag-gdgs
+# ============================================
+
+networks:
+  rag-gdgs-network:
+    driver: bridge
+

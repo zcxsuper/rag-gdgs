@@ -1,0 +1,97 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+spring:
+  profiles:
+    # 支持环境变量：SPRING_PROFILES_ACTIVE
+    # 默认值：dev（开发环境）
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  servlet:
+    multipart:
+      max-file-size: ${rag-gdgs.servlet.multipart.max-file-size}
+      max-request-size: ${rag-gdgs.servlet.multipart.max-request-size}
+
+  data:
+    redis:
+      host: ${rag-gdgs.redis.host}
+      port: ${rag-gdgs.redis.port}
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/rag_gdgs?serverTimezone=Asia/Shanghai&useSSL=false
+    username: ${rag-gdgs.datasource.username}
+    password: ${rag-gdgs.datasource.password}
+
+  rabbitmq:
+    host: ${rag-gdgs.rabbitmq.host}
+    port: ${rag-gdgs.rabbitmq.port}
+    username: ${rag-gdgs.rabbitmq.username}
+    password: ${rag-gdgs.rabbitmq.password}
+    virtual-host: /rag-gdgs
+
+langchain4j:
+  open-ai:
+    chat-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api-key: ${rag-gdgs.langchain4j.open-ai.chat-model.api-key}
+      model-name: qwen-plus
+      log-requests: true
+      log-responses: true
+
+    streaming-chat-model:
+      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+      api-key: ${rag-gdgs.langchain4j.open-ai.chat-model.api-key}
+      model-name: qwen-plus
+      log-requests: true
+      log-responses: true
+
+#    streaming-chat-model:
+#      base-url: http://localhost:11434/v1
+#      api-key: dummy
+#      model-name: deepseek-r1:7b
+#      log-requests: true
+#      log-responses: true
+
+#    embedding-model:
+#      base-url: https://dashscope.aliyuncs.com/compatible-mode/v1
+#      api-key: ${rag-gdgs.langchain4j.open-ai.chat-model.api-key}
+#      model-name: text-embedding-v3
+#      log-requests: true
+#      log-responses: true
+#      max-segments-per-batch: 10
+
+    # redis向量存储支持
+#  community:
+#    redis:
+#      host: localhost
+#      port: 6379
+#      dimension: 1024
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+
+#milvus:
+#  host: localhost
+#  port: 19530
+#  token: root:milvus
+#  database: gdgs_db
+#  collection: demo_file
+
+
+user:
+  password-length: ${rag-gdgs.user.password-length}
+
+jwt:
+  access-expire: ${rag-gdgs.jwt.access-expire}
+  refresh-expire: ${rag-gdgs.jwt.refresh-expire}
+  security: ${rag-gdgs.jwt.security}
+
+# 文件存储配置
+file:
+  # 文件存储路径，优先级：环境变量 FILE_STORAGE_PATH > profile 配置 > 默认值 ./files
+  # 可通过环境变量 FILE_STORAGE_PATH 覆盖，或在各 profile 中配置 rag-gdgs.file.storage-path
+  storage-path: ${rag-gdgs.file.storage-path}
+
+
